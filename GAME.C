@@ -2,8 +2,10 @@
 #include<conio.h>
 #include<graphics.h>
 #include<dos.h>
+#include "maze.h"
 int startAngle,endAngle,linexO,lineyO,linexT,lineyT;
-void angleCheck(int x,int y,int xinc,int yinc,int state){
+int x = 150, y = 300,xinc=0,yinc=0,xprev,yprev,state=0;
+void angleCheck(){
 	//not moving state is 0
 	if(state==0){
 		startAngle = 225;
@@ -63,24 +65,32 @@ void angleCheck(int x,int y,int xinc,int yinc,int state){
 		lineyT=lineyO;
 	}
 }
-void pacman(int x, int y,int xinc,int yinc,int state){
-	angleCheck(x,y,xinc,yinc,state);
+void pacman(){
+	angleCheck();
 	//display
 	ellipse(x,y,startAngle,endAngle,10,10);
 	line(x,y,linexO,lineyO);
 	line(x,y,linexT,lineyT);
 }
-int main(){
+void pacmanClear(){
+	setcolor(0);
+	ellipse(x,y,startAngle,endAngle,10,10);
+	line(x,y,linexO,lineyO);
+	line(x,y,linexT,lineyT);
+}
+void main(){
 	int gd = DETECT, gm;
-	int x = 250, y = 200,xinc=0,yinc=0,xprev,yprev,state=0;
 	char inp=' ';
-	initgraph(&gd, &gm, "");
+	//int xmin = 10, ymin = 10, xmax = 630, ymax = 450;
+	//int midx = ( xmin + xmax ) / 2 , midy = ( ymin + ymax ) / 2;
+	initgraph(&gd, &gm, "C:\\TURBOC3\\BGI");
+	maze();
+	//rectangle(10,10,630,450);
 	while(1){
-		cleardevice();
-		rectangle(10,10,630,450);
 		x += xinc;
 		y += yinc;
-		pacman(x,y,xinc,yinc,state);
+		setcolor(3);
+		pacman();
 		if(inp!=' '){
 			if(state==10){
 				state = 1;
@@ -138,7 +148,6 @@ int main(){
 				}
 			}
 		}else if(getpixel(x,y-11)>0){
-
 			if(yinc < 0){
 				yinc = 0;
 			}
@@ -166,8 +175,8 @@ int main(){
 			}
 		}
 		delay(40);
+		pacmanClear();
 	}
 	getch();
 	closegraph();
-	return 0;
 }
